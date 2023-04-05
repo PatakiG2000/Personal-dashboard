@@ -1,5 +1,7 @@
 import { v4 as uuid } from 'uuid';
 
+const html = document.querySelector('html') as HTMLHtmlElement;
+const body = document.querySelector('body') as HTMLBodyElement;
 const quoteParagraph = document.querySelector('.quote') as HTMLParagraphElement;
 const openTodoList = document.querySelector(
   '.todo-button',
@@ -13,8 +15,36 @@ const addNewTask = document.querySelector('.new-task-div') as HTMLDivElement;
 const todosDiv = document.querySelector('.todos') as HTMLDivElement;
 const todoOpen = document.querySelector('.todo-button') as HTMLButtonElement;
 const time = document.querySelector('.time') as HTMLHeadingElement;
+const bookMarkList = document.querySelector(
+  '.bookmark-list',
+) as HTMLOListElement;
 
 const weatherContainer = document.querySelector('.weather') as HTMLDivElement;
+
+const bookmarkTitleInput = document.getElementById(
+  'sitename',
+) as HTMLInputElement;
+const bookmarkUrlInput = document.getElementById('siteurl') as HTMLInputElement;
+const addBookmarkBtn = document.querySelector(
+  '.add-bookmark',
+) as HTMLButtonElement;
+const stockList = document.querySelector('.stock-list') as HTMLUListElement;
+
+//stickynotes
+const stickyForm = document.querySelector('.sticky-form');
+const addStickyNoteBtn = document.querySelector(
+  '.add-sticky-btn',
+) as HTMLButtonElement;
+const createStickyButton = document.querySelector(
+  '#createsticky',
+) as HTMLButtonElement;
+
+const stickyTitleInput = document.querySelector(
+  '#stickytitle',
+) as HTMLInputElement;
+const stickyTextInput = document.querySelector(
+  '#stickytext',
+) as HTMLInputElement;
 
 //get users location and fetch weather data
 navigator.geolocation.getCurrentPosition((pos) => {
@@ -29,12 +59,14 @@ navigator.geolocation.getCurrentPosition((pos) => {
     .then((data) => {
       console.log(data);
       weatherContainer.innerHTML = `
-      <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="weather icon" />
-    <p>${data.main.temp} </p>
+      <img src="https://openweathermap.org/img/wn/${
+        data.weather[0].icon
+      }@2x.png" alt="weather icon" />
+    <p>${(data.main.temp - 272.15).toFixed(1)}&#8451 </p>
           <p>${data.name} </p>
           <p>${data.weather[0].description}</p>
-          <p>${data.main.temp_min} </p>
-          <p>${data.main.temp_max}</p>
+          <p>${(data.main.temp_min - 272.15).toFixed(1)}&#8451 </p>
+          <p>${(data.main.temp_max - 272.15).toFixed(1)}&#8451</p>
           <p>${data.wind.speed}</p>
     `;
     });
@@ -61,14 +93,81 @@ let todos: {
   },
 ];
 
+//bookmark elements
+let bookmarks: {
+  uuid: string;
+  url: string;
+  name: string;
+}[] = [
+  {
+    uuid: uuid(),
+    url: 'https://fontawesome.com/icons/x?f=classic&s=solid&an=spin',
+    name: 'Fontawesome',
+  },
+];
+
+//rendering bookmarks
+function renderBookmarks(): void {
+  if (localStorage.getItem('bookmarks')) {
+    const storedBookmarks = localStorage.getItem('bookmarks')!;
+    bookmarks = JSON.parse(storedBookmarks);
+  }
+  bookMarkList.innerHTML = bookmarks
+    .map((bookmark) => {
+      return `   <li>
+      <a href=${bookmark.url} target="_blank"
+        >${bookmark.name} </a
+      >
+      <button id=${bookmark.uuid} >Delete</button>
+    </li>`;
+    })
+    .join('');
+}
+
+//adding new bookmark
+function newBookmark(): void {
+  if (bookmarkTitleInput.value && bookmarkUrlInput.value) {
+    bookmarks.push({
+      uuid: uuid(),
+      url: bookmarkUrlInput.value,
+      name: bookmarkTitleInput.value,
+    });
+  }
+  localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+  renderBookmarks();
+}
+
+//deleting bookmark
+function deleteBookmark(id: string): void {
+  const newBookmarks = bookmarks.filter((bookmark) => {
+    return bookmark.uuid !== id;
+  });
+  bookmarks = newBookmarks;
+  localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+  renderBookmarks();
+}
+
+//handling delete button
+bookMarkList.addEventListener('click', function (e: Event): void {
+  const target = e.target as HTMLButtonElement;
+  deleteBookmark(target.id);
+});
+addBookmarkBtn.addEventListener('click', newBookmark);
+
+renderBookmarks();
+
 //render elements to todolist
 function renderTodo(): void {
+  if (localStorage.getItem('todos')) {
+    const storedTodos = localStorage.getItem('todos')!;
+    todos = JSON.parse(storedTodos);
+  }
   todoList.innerHTML = todos
     .map((todo) => {
       return ` <li  >
     <input type="checkbox" />
     <p>${todo.content} </p>
-    <button id=${todo.uuid} class="delete-btn">del</button>
+    <button id=${todo.uuid} class="delete-btn"><i class="fa-solid fa-x"></i></i></button>
 
   </li>`;
     })
@@ -83,6 +182,7 @@ addTodoBtn.addEventListener('click', function (): void {
     uuid: uuid(),
   });
   todoInput.value = '';
+  localStorage.setItem('todos', JSON.stringify(todos));
   renderTodo();
 });
 
@@ -103,8 +203,131 @@ todoOpen.addEventListener('click', function (): void {
 });
 
 //delete todos
-todoList.addEventListener('click', function (e) {
-  const newTodos = todos.filter((todo) => todo.uuid !== e.target?.id);
+todoList.addEventListener('click', function (e: Event): void {
+  const target = e.target as HTMLButtonElement;
+  const newTodos = todos.filter((todo) => todo.uuid !== target.id);
   todos = newTodos;
+  localStorage.setItem('todos', JSON.stringify(todos));
   renderTodo();
 });
+
+//getting  stock prices
+const tickers: [string, string] = ['BTC', 'ETH'];
+
+tickers.forEach((ticker) => {
+  let options = {
+    method: 'GET',
+    headers: { 'x-api-key': 'daZHlf4Dw1mex44HsXAWPw==H5QkzNXhD5cBEaoP' },
+  };
+
+  let url = `https://api.api-ninjas.com/v1/cryptoprice?symbol=${ticker}`;
+
+  fetch(url, options)
+    .then((res) => res.json()) // parse response as JSON
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log(`error ${err}`);
+    });
+});
+
+//added the match random to the end so every link will be different thus the background changes
+function change(): void {
+  const url = `https://picsum.photos/1920/1280/?blur/${Math.random()}`;
+  html.style.background = `url(${url})`;
+}
+
+//changing background
+setInterval(() => {
+  change();
+  html.style.backgroundRepeat = 'no-repeat';
+  html.style.backgroundSize = 'cover';
+}, 300000);
+
+//sticky notes
+addStickyNoteBtn.addEventListener('click', function (): void {
+  stickyForm?.classList.toggle('hidden');
+});
+
+const deleteSticky = (e) => {
+  e.target.parentNode.remove();
+};
+
+let isDragging = false;
+let dragTarget;
+
+let lastOffsetX = 0;
+let lastOffsetY = 0;
+
+function drag(e: Event) {
+  if (!isDragging) return;
+
+  // console.log(lastOffsetX);
+
+  dragTarget.style.left = e.clientX - lastOffsetX + 'px';
+  dragTarget.style.top = e.clientY - lastOffsetY + 'px';
+}
+
+function createSticky(): void {
+  const newSticky = document.createElement('div');
+  const html = `<h3>${stickyTitleInput.value.replace(
+    /<\/?[^>]+(>|$)/g,
+    '',
+  )}</h3><p>${stickyTextInput.value
+    .replace(/<\/?[^>]+(>|$)/g, '')
+    .replace(
+      /\r\n|\r|\n/g,
+      '<br />',
+    )}</p><span class="deletesticky">&times;</span>`;
+  newSticky.classList.add('drag', 'sticky');
+  newSticky.innerHTML = html;
+  //newSticky.style.backgroundColor = randomColor();
+  body.append(newSticky);
+  positionSticky(newSticky);
+  applyDeleteListener();
+  clearStickyForm();
+  stickyForm?.classList.toggle('hidden');
+}
+function clearStickyForm() {
+  stickyTitleInput.value = '';
+  stickyTextInput.value = '';
+}
+function positionSticky(sticky: HTMLDivElement) {
+  sticky.style.left =
+    window.innerWidth / 2 -
+    sticky.clientWidth / 2 +
+    (-100 + Math.round(Math.random() * 50)) +
+    'px';
+  sticky.style.top =
+    window.innerHeight / 2 -
+    sticky.clientHeight / 2 +
+    (-100 + Math.round(Math.random() * 50)) +
+    'px';
+}
+
+function applyDeleteListener() {
+  let deleteStickyButtons = document.querySelectorAll('.deletesticky');
+  deleteStickyButtons.forEach((dsb) => {
+    dsb.removeEventListener('click', deleteSticky, false);
+    dsb.addEventListener('click', deleteSticky);
+  });
+}
+
+window.addEventListener('mousedown', (e: Event) => {
+  const target = e.target;
+  if (!target.classList.contains('drag')) {
+    return;
+  }
+  dragTarget = e.target;
+  dragTarget.parentNode.append(dragTarget);
+  lastOffsetX = e.offsetX;
+  lastOffsetY = e.offsetY;
+  // console.log(lastOffsetX, lastOffsetY);
+  isDragging = true;
+});
+window.addEventListener('mousemove', drag);
+window.addEventListener('mouseup', () => (isDragging = false));
+
+createStickyButton.addEventListener('click', createSticky);
+applyDeleteListener();

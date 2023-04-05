@@ -15,15 +15,33 @@
       href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700&display=swap"
       rel="stylesheet"
     />
+
     <title>Snowpack App</title>
   </head>
   <body>
     <div class="content">
       <div class="heading">
-        <div>
-          <p>Bookmarks</p>
-          <p>Stocks</p>
+        <div class="bookmarks">
+          <button class="bookmark-btn">Bookmarks</button>
+          <div class="bookmarks-container">
+            <input id="sitename" type="text" placeholder="title" />
+            <input id="siteurl" type="text" placeholder="url" />
+            <button class="add-bookmark">Add</button>
+            <ol class="bookmark-list">
+              <li>
+                <a href="https://fontawesome.com/icons/x?f=classic&s=solid"
+                  >Fontawesome</a
+                >
+              </li>
+            </ol>
+          </div>
         </div>
+        <div class="stocks">
+          <ul class="stock-list">
+            <li class="stock-element"></li>
+          </ul>
+        </div>
+
         <div class="weather">
           <img src="" alt="weather icon" />
           <p>Weather</p>
@@ -39,6 +57,21 @@
       <div class="footer">
         <button>Learning mode</button>
         <button class="todo-button">Todo list</button>
+        <button class="add-sticky-btn">New sticky note</button>
+        <!--  NOT MINE -->
+        <div class="sticky-form hidden">
+          <label for="stickytitle">Title for your sticky:</label>
+          <input type="text" name="stickytitle" id="stickytitle" />
+          <label for="stickytext">Write something down:</label>
+          <textarea
+            name="stickytext"
+            id="stickytext"
+            cols="24"
+            rows="10"
+          ></textarea>
+          <button class="button" id="createsticky">Stick it!</button>
+        </div>
+        <!--  NOT MINE -->
         <div class="todos hidden">
           <button class="close">x</button>
           <ul class="todo-list"></ul>
