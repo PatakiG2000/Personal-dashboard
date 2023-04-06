@@ -11,7 +11,7 @@ html {
   background-size: cover;
   font-family: 'Assistant', sans-serif;
   transition: background 1s;
-  background-color: grey;
+  background-color: white;
 }
 
 body {
@@ -21,6 +21,14 @@ body {
   color: white;
   position: relative;
   height: 100%;
+}
+
+h1,
+h2,
+h3,
+button,
+p {
+  text-shadow: 2px 1px #140e0e79;
 }
 
 h1 {
@@ -117,6 +125,7 @@ input {
   user-select: none;
 }
 .sticky {
+  text-shadow: none;
   background: yellow;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
   color: #00243f;
@@ -132,6 +141,7 @@ input {
   /* color: #0065b3; */
   color: #00243f;
   pointer-events: none;
+  text-shadow: none;
 }
 .sticky h3 {
   border-bottom: dashed 2px #0085e8;

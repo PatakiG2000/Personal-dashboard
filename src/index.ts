@@ -250,17 +250,27 @@ addStickyNoteBtn.addEventListener('click', function (): void {
   stickyForm?.classList.toggle('hidden');
 });
 
-const deleteSticky = (e) => {
-  e.target.parentNode.remove();
+const deleteSticky = (e: Event): void => {
+  const target = e.target as Element;
+  if (target.parentNode) {
+    const parentNode = target.parentNode as unknown as ChildNode;
+    console.log(parentNode.id);
+    const newStickies = stickyNotes.filter(
+      (sticky) => sticky.uuid !== parentNode.id,
+    );
+    stickyNotes = newStickies;
+    saveStickies();
+    parentNode.remove();
+  }
 };
 
 let isDragging = false;
-let dragTarget;
+let dragTarget: any;
 
 let lastOffsetX = 0;
 let lastOffsetY = 0;
 
-function drag(e: Event) {
+function drag(e: MouseEvent) {
   if (!isDragging) return;
 
   // console.log(lastOffsetX);
@@ -269,8 +279,17 @@ function drag(e: Event) {
   dragTarget.style.top = e.clientY - lastOffsetY + 'px';
 }
 
+let stickyNotes: {
+  title: string;
+  content: string;
+  uuid: string;
+  style: string;
+}[];
+
 function createSticky(): void {
   const newSticky = document.createElement('div');
+  const stickyId = uuid();
+  newSticky.id = stickyId;
   const html = `<h3>${stickyTitleInput.value.replace(
     /<\/?[^>]+(>|$)/g,
     '',
@@ -283,10 +302,17 @@ function createSticky(): void {
   newSticky.classList.add('drag', 'sticky');
   newSticky.innerHTML = html;
   //newSticky.style.backgroundColor = randomColor();
+  stickyNotes.push({
+    title: stickyTitleInput.value,
+    content: stickyTextInput.value,
+    uuid: stickyId,
+    style: '',
+  });
   body.append(newSticky);
   positionSticky(newSticky);
   applyDeleteListener();
   clearStickyForm();
+  saveStickies();
   stickyForm?.classList.toggle('hidden');
 }
 function clearStickyForm() {
@@ -314,8 +340,46 @@ function applyDeleteListener() {
   });
 }
 
-window.addEventListener('mousedown', (e: Event) => {
-  const target = e.target;
+//Rendering stored stickies
+function renderStickies(): void {
+  const storedStickies = localStorage.getItem('stickies')!;
+  stickyNotes = JSON.parse(storedStickies);
+  console.log(stickyNotes);
+  if (storedStickies) {
+    stickyNotes.forEach((sticky) => {
+      let newSticky = document.createElement('div') as HTMLDivElement;
+      newSticky.id = sticky.uuid;
+
+      const html = `<h3>${sticky.title.replace(
+        /<\/?[^>]+(>|$)/g,
+        '',
+      )}</h3><p>${sticky.content
+        .replace(/<\/?[^>]+(>|$)/g, '')
+        .replace(
+          /\r\n|\r|\n/g,
+          '<br />',
+        )}</p><span class="deletesticky">&times;</span>`;
+      newSticky.classList.add('drag', 'sticky');
+      newSticky.innerHTML = html;
+      newSticky.style.left = sticky.style.left;
+      newSticky.style.top = sticky.style.top;
+      newSticky.style.bottom = sticky.style.bottom;
+      newSticky.style.right = sticky.style.right;
+      body.append(newSticky);
+      console.log(sticky.style);
+      applyDeleteListener();
+    });
+  }
+}
+
+//saving stickies to localstorage
+function saveStickies(): void {
+  localStorage.setItem('stickies', JSON.stringify(stickyNotes));
+}
+
+//Saving the stlye with timeout so it gets the correct position
+window.addEventListener('mousedown', (e: MouseEvent) => {
+  const target = e.target as Element;
   if (!target.classList.contains('drag')) {
     return;
   }
@@ -325,9 +389,18 @@ window.addEventListener('mousedown', (e: Event) => {
   lastOffsetY = e.offsetY;
   // console.log(lastOffsetX, lastOffsetY);
   isDragging = true;
+  setTimeout(() => {
+    stickyNotes.forEach((sticky) => {
+      if (sticky.uuid === target.id) {
+        sticky.style = dragTarget.style;
+      }
+      saveStickies();
+    });
+  }, 400);
 });
 window.addEventListener('mousemove', drag);
 window.addEventListener('mouseup', () => (isDragging = false));
 
 createStickyButton.addEventListener('click', createSticky);
 applyDeleteListener();
+renderStickies();
