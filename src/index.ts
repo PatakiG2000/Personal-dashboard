@@ -253,7 +253,7 @@ addStickyNoteBtn.addEventListener('click', function (): void {
 const deleteSticky = (e: Event): void => {
   const target = e.target as Element;
   if (target.parentNode) {
-    const parentNode = target.parentNode as unknown as ChildNode;
+    const parentNode = target.parentNode as Element;
     console.log(parentNode.id);
     const newStickies = stickyNotes.filter(
       (sticky) => sticky.uuid !== parentNode.id,
@@ -283,7 +283,12 @@ let stickyNotes: {
   title: string;
   content: string;
   uuid: string;
-  style: string;
+  style: {
+    left?: string | undefined;
+    top?: string | undefined;
+    right?: string | undefined;
+    bottom?: string | undefined;
+  };
 }[];
 
 function createSticky(): void {
@@ -306,7 +311,12 @@ function createSticky(): void {
     title: stickyTitleInput.value,
     content: stickyTextInput.value,
     uuid: stickyId,
-    style: '',
+    style: {
+      left: '',
+      top: '',
+      right: '',
+      bottom: '',
+    },
   });
   body.append(newSticky);
   positionSticky(newSticky);
@@ -361,10 +371,10 @@ function renderStickies(): void {
         )}</p><span class="deletesticky">&times;</span>`;
       newSticky.classList.add('drag', 'sticky');
       newSticky.innerHTML = html;
-      newSticky.style.left = sticky.style.left;
-      newSticky.style.top = sticky.style.top;
-      newSticky.style.bottom = sticky.style.bottom;
-      newSticky.style.right = sticky.style.right;
+      newSticky.style.left = sticky.style.left ?? '0';
+      newSticky.style.top = sticky.style.top ?? '0';
+      newSticky.style.bottom = sticky.style.bottom ?? '0';
+      newSticky.style.right = sticky.style.right ?? '0';
       body.append(newSticky);
       console.log(sticky.style);
       applyDeleteListener();
@@ -377,7 +387,6 @@ function saveStickies(): void {
   localStorage.setItem('stickies', JSON.stringify(stickyNotes));
 }
 
-//Saving the stlye with timeout so it gets the correct position
 window.addEventListener('mousedown', (e: MouseEvent) => {
   const target = e.target as Element;
   if (!target.classList.contains('drag')) {
@@ -387,20 +396,130 @@ window.addEventListener('mousedown', (e: MouseEvent) => {
   dragTarget.parentNode.append(dragTarget);
   lastOffsetX = e.offsetX;
   lastOffsetY = e.offsetY;
-  // console.log(lastOffsetX, lastOffsetY);
   isDragging = true;
-  setTimeout(() => {
-    stickyNotes.forEach((sticky) => {
-      if (sticky.uuid === target.id) {
-        sticky.style = dragTarget.style;
-      }
-      saveStickies();
-    });
-  }, 400);
 });
 window.addEventListener('mousemove', drag);
-window.addEventListener('mouseup', () => (isDragging = false));
+
+//Saving the stlye
+window.addEventListener('mouseup', (e: MouseEvent) => {
+  const target = e.target as Element;
+  isDragging = false;
+  stickyNotes.forEach((sticky) => {
+    if (sticky.uuid === target.id) {
+      sticky.style = dragTarget.style;
+    }
+    saveStickies();
+  });
+});
 
 createStickyButton.addEventListener('click', createSticky);
 applyDeleteListener();
 renderStickies();
+
+///LEARNING MODE
+const remainingTime = document.querySelector('.timer') as HTMLHeadingElement;
+const startTimerBtn = document.querySelector(
+  '.start-timer-btn',
+) as HTMLButtonElement;
+const pauseTimerBtn = document.querySelector(
+  '.pause-timer-btn',
+) as HTMLButtonElement;
+const breakBtn = document.querySelector('.break-btn') as HTMLButtonElement;
+const longBreakBtn = document.querySelector(
+  '.long-break-btn',
+) as HTMLButtonElement;
+
+const learningDiv = document.querySelector('.learning') as HTMLDivElement;
+const defaultModeDiv = document.querySelector(
+  '.default-content',
+) as HTMLDivElement;
+const timerBtn = document.querySelector('.timer-btn') as HTMLButtonElement;
+const learningBtn = document.querySelector(
+  '.learning-mode-btn',
+) as HTMLButtonElement;
+const leaveLearningBtn = document.querySelector(
+  '.leave-btn',
+) as HTMLButtonElement;
+
+function toggleMode(): void {
+  learningDiv.classList.toggle('hidden');
+  defaultModeDiv.classList.toggle('hidden');
+  learningBtn.classList.toggle('hidden');
+  leaveLearningBtn.classList.toggle('hidden');
+}
+
+function clearLearningInterval(): void {
+  clearInterval(learningTimeInterval);
+}
+
+learningBtn.addEventListener('click', () => {
+  toggleMode();
+});
+
+leaveLearningBtn.addEventListener('click', () => {
+  toggleMode();
+  clearLearningInterval();
+});
+
+function formatTime(timeInSeconds: number): string {
+  const minutes = Math.floor(timeInSeconds / 60);
+  const seconds = String(timeInSeconds % 60);
+  return `${minutes}:${seconds.length > 1 ? seconds : '0' + seconds}`;
+}
+
+let learningTime = 1800;
+let learningTimeInterval: any;
+let audio = document.getElementById('alarm') as HTMLAudioElement;
+
+startTimerBtn.addEventListener('click', () => {
+  startTimerBtn.classList.toggle('hidden');
+  pauseTimerBtn.classList.toggle('hidden');
+  remainingTime.textContent = formatTime(learningTime);
+  learningTimeInterval = setInterval(() => {
+    learningTime--;
+    remainingTime.textContent = formatTime(learningTime);
+    if (learningTime === 0) {
+      timesUp();
+    }
+  }, 1000);
+});
+
+pauseTimerBtn.addEventListener('click', () => {
+  startTimerBtn.classList.toggle('hidden');
+  pauseTimerBtn.classList.toggle('hidden');
+  clearLearningInterval();
+});
+
+breakBtn.addEventListener('click', () => {
+  resetButtons();
+  clearLearningInterval();
+  learningTime = 300;
+  remainingTime.textContent = formatTime(learningTime);
+});
+
+longBreakBtn.addEventListener('click', () => {
+  resetButtons();
+  clearLearningInterval();
+  learningTime = 900;
+  remainingTime.textContent = formatTime(learningTime);
+});
+
+timerBtn.addEventListener('click', () => {
+  resetButtons();
+  clearLearningInterval();
+  learningTime = 1800;
+  remainingTime.textContent = formatTime(learningTime);
+});
+
+function timesUp(): void {
+  clearLearningInterval();
+  audio.play();
+  remainingTime.textContent = "Time's up";
+  learningTime = 1800;
+}
+
+//to reset all buttons
+function resetButtons() {
+  startTimerBtn.classList.value = 'start-timer-btn';
+  pauseTimerBtn.classList.value = 'pause-timer-btn hidden';
+}

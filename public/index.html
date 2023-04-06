@@ -51,11 +51,22 @@
         </div>
       </div>
       <div class="middle">
-        <h1 class="time"></h1>
-        <p class="quote">Random deep quote fhuu</p>
+        <div class="default-content">
+          <h1 class="time"></h1>
+          <p class="quote">Random deep quote fhuu</p>
+        </div>
+        <div class="learning hidden">
+          <button class="timer-btn">Timer</button>
+          <button class="break-btn">Break</button>
+          <button class="long-break-btn">Long break</button>
+          <h1 class="timer">30:00</h1>
+          <button class="start-timer-btn">Start</button>
+          <button class="pause-timer-btn hidden">Pause</button>
+        </div>
       </div>
       <div class="footer">
-        <button>Learning mode</button>
+        <button class="learning-mode-btn">Learning mode</button>
+        <button class="leave-btn hidden">Leave learning mode</button>
         <button class="todo-button">Todo list</button>
         <button class="add-sticky-btn">New sticky note</button>
         <!--  NOT MINE -->
@@ -89,6 +100,9 @@
         </div>
       </div>
     </div>
+    <audio id="alarm">
+      <source src="audio/alarm.mp3" type="audio/mpeg" />
+    </audio>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <script type="module" src="/dist/index.js"></script>
   </body>
