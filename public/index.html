@@ -23,9 +23,9 @@
       <div class="heading">
         <div class="bookmarks">
           <button class="bookmark-btn">Bookmarks</button>
-          <div class="bookmarks-container">
-            <input id="sitename" type="text" placeholder="title" />
-            <input id="siteurl" type="text" placeholder="url" />
+          <div class="bookmarks-container hidden">
+            <input id="sitename" type="text" placeholder="Title" />
+            <input id="siteurl" type="text" placeholder="Site url" />
             <button class="add-bookmark">Add</button>
             <ol class="bookmark-list">
               <li>
@@ -36,9 +36,13 @@
             </ol>
           </div>
         </div>
-        <div class="stocks">
+        <div class="stocks hidden">
           <ul class="stock-list">
-            <li class="stock-element"></li>
+            <li class="stock-element">asd</li>
+            <li class="stock-element">asd</li>
+            <li class="stock-element">asd</li>
+            <li class="stock-element">asd</li>
+            <li class="stock-element">asd</li>
           </ul>
         </div>
 
@@ -56,35 +60,17 @@
           <p class="quote">Random deep quote fhuu</p>
         </div>
         <div class="learning hidden">
-          <button class="timer-btn">Timer</button>
-          <button class="break-btn">Break</button>
-          <button class="long-break-btn">Long break</button>
+          <div class="learning-btn-container">
+            <button class="timer-btn">Timer</button>
+            <button class="break-btn">Break</button>
+            <button class="long-break-btn">Long break</button>
+          </div>
           <h1 class="timer">30:00</h1>
           <button class="start-timer-btn">Start</button>
           <button class="pause-timer-btn hidden">Pause</button>
         </div>
-      </div>
-      <div class="footer">
-        <button class="learning-mode-btn">Learning mode</button>
-        <button class="leave-btn hidden">Leave learning mode</button>
-        <button class="todo-button">Todo list</button>
-        <button class="add-sticky-btn">New sticky note</button>
-        <!--  NOT MINE -->
-        <div class="sticky-form hidden">
-          <label for="stickytitle">Title for your sticky:</label>
-          <input type="text" name="stickytitle" id="stickytitle" />
-          <label for="stickytext">Write something down:</label>
-          <textarea
-            name="stickytext"
-            id="stickytext"
-            cols="24"
-            rows="10"
-          ></textarea>
-          <button class="button" id="createsticky">Stick it!</button>
-        </div>
-        <!--  NOT MINE -->
-        <div class="todos hidden">
-          <button class="close">x</button>
+        <div class="todos">
+          <button class="close">Close</button>
           <ul class="todo-list"></ul>
           <button class="new-task-btn">New task</button>
           <div class="new-task-div hidden">
@@ -92,11 +78,35 @@
               class="todo-input"
               name=""
               id=""
-              cols="30"
+              cols="10"
               rows="3"
+              maxlength="50"
+              placeholder="Learn a new skill..."
             ></textarea>
             <button class="add-todo-btn">Add</button>
           </div>
+        </div>
+      </div>
+      <div class="footer">
+        <button class="learning-mode-btn">Learning mode</button>
+        <button class="leave-btn hidden">Leave learning mode</button>
+        <div class="todo-sticky">
+          <button class="todo-button hidden">Todo list</button>
+          <button class="add-sticky-btn">New sticky note</button>
+        </div>
+
+        <div class="sticky-form hidden">
+          <label for="stickytitle">Title for your sticky:</label>
+          <input type="text" name="stickytitle" id="stickytitle" />
+          <label for="stickytext">Your note: </label>
+          <textarea
+            name="stickytext"
+            id="stickytext"
+            cols="24"
+            rows="10"
+          ></textarea>
+          <button class="button" id="createsticky">Stick</button>
+          <button class="button" id="closesticky">Close</button>
         </div>
       </div>
     </div>

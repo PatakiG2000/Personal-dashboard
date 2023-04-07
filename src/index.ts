@@ -45,6 +45,15 @@ const stickyTitleInput = document.querySelector(
 const stickyTextInput = document.querySelector(
   '#stickytext',
 ) as HTMLInputElement;
+const bookmarkContainer = document.querySelector(
+  '.bookmarks-container',
+) as HTMLDivElement;
+const bookmarkBtn = document.querySelector(
+  '.bookmark-btn',
+) as HTMLButtonElement;
+const closeStickyBtn = document.getElementById(
+  'closesticky',
+) as HTMLButtonElement;
 
 //get users location and fetch weather data
 navigator.geolocation.getCurrentPosition((pos) => {
@@ -59,15 +68,20 @@ navigator.geolocation.getCurrentPosition((pos) => {
     .then((data) => {
       console.log(data);
       weatherContainer.innerHTML = `
-      <img src="https://openweathermap.org/img/wn/${
+      <div class="icon-name">
+      <img class="weather-icon" src="https://openweathermap.org/img/wn/${
         data.weather[0].icon
       }@2x.png" alt="weather icon" />
-    <p>${(data.main.temp - 272.15).toFixed(1)}&#8451 </p>
-          <p>${data.name} </p>
-          <p>${data.weather[0].description}</p>
-          <p>${(data.main.temp_min - 272.15).toFixed(1)}&#8451 </p>
-          <p>${(data.main.temp_max - 272.15).toFixed(1)}&#8451</p>
-          <p>${data.wind.speed}</p>
+      <p>${data.weather[0].description}</p>
+      </div>
+      <div>
+    <h2>${data.name} </h2>
+          <p>Temperature : ${(data.main.temp - 272.15).toFixed(1)} &#8451</p>
+         
+          <p>Daily min: ${(data.main.temp_min - 272.15).toFixed(1)}&#8451 </p>
+          <p>Daily max: ${(data.main.temp_max - 272.15).toFixed(1)}&#8451</p>
+          <p>Wind: ${data.wind.speed} km/h</p>
+          </div>
     `;
     });
 });
@@ -86,10 +100,12 @@ setInterval(() => {
 let todos: {
   content: string;
   uuid: string;
+  completed: boolean;
 }[] = [
   {
     content: 'write your first todo',
     uuid: uuid(),
+    completed: false,
   },
 ];
 
@@ -105,6 +121,10 @@ let bookmarks: {
     name: 'Fontawesome',
   },
 ];
+
+bookmarkBtn.addEventListener('click', () => {
+  bookmarkContainer.classList.toggle('hidden');
+});
 
 //rendering bookmarks
 function renderBookmarks(): void {
@@ -132,6 +152,8 @@ function newBookmark(): void {
       url: bookmarkUrlInput.value,
       name: bookmarkTitleInput.value,
     });
+    bookmarkUrlInput.value = '';
+    bookmarkTitleInput.value = '';
   }
   localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
   renderBookmarks();
@@ -164,10 +186,13 @@ function renderTodo(): void {
   }
   todoList.innerHTML = todos
     .map((todo) => {
-      return ` <li  >
-    <input type="checkbox" />
+      return ` <li class="todo-element" >
+      
+    <input type="checkbox"   ${todo.completed ? 'checked' : ''} data-uuid="${
+        todo.uuid
+      }" />
     <p>${todo.content} </p>
-    <button id=${todo.uuid} class="delete-btn"><i class="fa-solid fa-x"></i></i></button>
+    <button id=${todo.uuid} class="delete-btn">X</button>
 
   </li>`;
     })
@@ -180,6 +205,7 @@ addTodoBtn.addEventListener('click', function (): void {
   todos.push({
     content: todo,
     uuid: uuid(),
+    completed: false,
   });
   todoInput.value = '';
   localStorage.setItem('todos', JSON.stringify(todos));
@@ -190,6 +216,8 @@ renderTodo();
 
 newTaskBtn.addEventListener('click', function (): void {
   addNewTask.classList.toggle('hidden');
+  newTaskBtn.textContent =
+    newTaskBtn.textContent === 'New task' ? 'Close' : 'New task';
 });
 
 closeBtn.addEventListener('click', function (): void {
@@ -205,10 +233,25 @@ todoOpen.addEventListener('click', function (): void {
 //delete todos
 todoList.addEventListener('click', function (e: Event): void {
   const target = e.target as HTMLButtonElement;
-  const newTodos = todos.filter((todo) => todo.uuid !== target.id);
-  todos = newTodos;
-  localStorage.setItem('todos', JSON.stringify(todos));
-  renderTodo();
+
+  if (target.id) {
+    const newTodos = todos.filter((todo) => todo.uuid !== target.id);
+    todos = newTodos;
+    localStorage.setItem('todos', JSON.stringify(todos));
+    renderTodo();
+  } else if (target.dataset.uuid) {
+    const newTodos = todos.map((todo) => {
+      if (todo.uuid === target.dataset.uuid) {
+        todo.completed = !todo.completed;
+        return todo;
+      } else {
+        return todo;
+      }
+    });
+    todos = newTodos;
+    localStorage.setItem('todos', JSON.stringify(todos));
+    renderTodo();
+  }
 });
 
 //getting  stock prices
@@ -247,6 +290,10 @@ setInterval(() => {
 
 //sticky notes
 addStickyNoteBtn.addEventListener('click', function (): void {
+  stickyForm?.classList.toggle('hidden');
+});
+
+closeStickyBtn.addEventListener('click', function (): void {
   stickyForm?.classList.toggle('hidden');
 });
 
