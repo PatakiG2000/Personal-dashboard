@@ -1,5 +1,4 @@
 import {
-  openTodoList,
   addTodoBtn,
   todoList,
   todoInput,

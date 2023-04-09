@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "My Dashboard",
+  "version": "1.0.0",
+  "description": "Portfolio project",
+  "action": {
+    "default_icon": "icon.png"
+  },
+  "chrome_url_overrides": {
+    "newtab": "public/images/user-solid.svg"
+  }
+}

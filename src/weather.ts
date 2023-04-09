@@ -12,7 +12,6 @@ export function initWeather(): void {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         weatherContainer.innerHTML = `
           <div class="icon-name">
           <img class="weather-icon" src="https://openweathermap.org/img/wn/${
@@ -38,6 +37,7 @@ export function initWeather(): void {
               }</p>
               </div>
         `;
-      });
+      })
+      .catch((err) => alert(err));
   });
 }

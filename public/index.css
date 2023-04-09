@@ -12,10 +12,18 @@ html {
   font-family: 'Assistant', sans-serif;
   transition: background 1s;
   background-color: rgb(22, 21, 21);
-
   margin: 0px;
   height: 100%;
   width: 100%;
+}
+
+a:active,
+a:visited {
+  color: #ffffffcc;
+}
+
+p {
+  text-shadow: 0 0 3px #000000, 0 0 5px #0000ff02 !important;
 }
 
 body {
@@ -55,6 +63,10 @@ img {
   margin: 0;
 }
 
+.pointer {
+  pointer-events: none;
+}
+
 .content {
   display: grid;
   max-height: 100vh;
@@ -67,8 +79,7 @@ img {
 }
 
 .bookmark-btn {
-  padding-top: 1em;
-  padding-left: 1em;
+  padding: 1em 0 0 1em;
 }
 
 .bookmark-inputs {
@@ -87,8 +98,7 @@ img {
 .bookmarks-container {
   position: absolute;
   margin: 0;
-  padding: 0;
-  padding-left: 1em;
+  padding: 0 0 0 1em;
   z-index: 1;
 }
 
@@ -97,8 +107,16 @@ img {
   margin: 0;
 }
 
-.pointer {
-  pointer-events: none;
+#siteurl,
+#sitename {
+  padding: 0.1em 0.2em;
+  border: none;
+  transition: all 200ms;
+}
+
+#siteurl:hover,
+#sitename:hover {
+  background-color: rgba(255, 255, 255, 0.753);
 }
 
 .weather {
@@ -309,7 +327,7 @@ input {
   /* color: #0065b3; */
   color: #00243f;
   pointer-events: none;
-  text-shadow: none;
+  text-shadow: none !important;
 }
 .sticky h3 {
   border-bottom: dashed 2px #0085e8;
@@ -388,14 +406,11 @@ button.button:hover {
   background-color: rgb(0, 0, 0);
 }
 
-#siteurl,
-#sitename {
-  padding: 0.1em 0.2em;
-  border: none;
-  transition: all 200ms;
+.space {
+  padding: 3rem;
 }
 
-#siteurl:hover,
-#sitename:hover {
-  background-color: rgba(255, 255, 255, 0.753);
+.label {
+  margin-top: 1em;
+  text-shadow: 0 0 3px #000000, 0 0 5px #0000ff02 !important;
 }
