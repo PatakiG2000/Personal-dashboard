@@ -12,6 +12,7 @@ html {
   font-family: 'Assistant', sans-serif;
   transition: background 1s;
   background-color: rgb(22, 21, 21);
+
   margin: 0px;
   height: 100%;
   width: 100%;
@@ -21,29 +22,32 @@ body {
   padding: 0;
   color: white;
   position: relative;
-  backdrop-filter: blur(1px);
+  backdrop-filter: blur(3px);
+
   margin: 0px;
   padding: 0;
   min-height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 h1,
 h2,
 h3,
 button {
-  text-shadow: 2px 1px #140e0e79;
+  text-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   margin: 0;
   padding: 0;
+  transition: all 200ms;
 }
 
-h1 {
+button:hover {
+  color: #ffffffc0;
 }
 
 p {
   margin: 0;
   padding: 0;
-  text-shadow: 2px 1px #140e0e79;
 }
 
 img {
@@ -63,17 +67,38 @@ img {
 }
 
 .bookmark-btn {
-  padding: 1em;
+  padding-top: 1em;
+  padding-left: 1em;
+}
+
+.bookmark-inputs {
+  margin: 0.2em;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.bookmark-link {
+  text-decoration: underline;
+  color: white;
+  margin-right: 0.2em;
 }
 
 .bookmarks-container {
+  position: absolute;
   margin: 0;
+  padding: 0;
   padding-left: 1em;
+  z-index: 1;
 }
 
 .bookmarks-container input {
   padding: 0;
   margin: 0;
+}
+
+.pointer {
+  pointer-events: none;
 }
 
 .weather {
@@ -96,11 +121,24 @@ img {
 
 .quote {
   font-size: 1.25rem;
+  text-shadow: 0 0 3px #000000, 0 0 5px #0000ff02 !important;
 }
 
 .time,
 .timer {
   font-size: 6.25rem;
+}
+
+.info {
+  margin-top: 1em;
+  display: block;
+  color: white;
+  text-shadow: 2px 1px #140e0e79;
+  transition: all 300ms;
+}
+
+.info:hover {
+  color: rgba(255, 255, 255, 0.692);
 }
 
 .learning-btn-container {
@@ -196,12 +234,19 @@ button {
 }
 
 .delete-btn {
-  height: 22px;
+  height: 24px;
+  padding: 0.2em;
 }
 
 .todo-element p {
   word-wrap: break-word;
   width: 80%;
+  white-space: pre-line;
+}
+
+.sticky-text {
+  word-wrap: break-word;
+  width: 100%;
   white-space: pre-line;
 }
 
@@ -226,6 +271,8 @@ input {
 }
 
 .quote {
+  text-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  -webkit-text-stroke: 1px solid black;
 }
 
 .todo-input {
@@ -255,6 +302,7 @@ input {
   padding: 1rem;
   position: absolute;
   width: 12.5rem;
+  z-index: 4;
 }
 .sticky h3,
 .sticky p {
@@ -338,4 +386,16 @@ button.button {
 
 button.button:hover {
   background-color: rgb(0, 0, 0);
+}
+
+#siteurl,
+#sitename {
+  padding: 0.1em 0.2em;
+  border: none;
+  transition: all 200ms;
+}
+
+#siteurl:hover,
+#sitename:hover {
+  background-color: rgba(255, 255, 255, 0.753);
 }
