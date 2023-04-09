@@ -4,9 +4,9 @@ This is my personal dashboard portfolio project, which can be used as a chrome e
 
 You can visit the site here: https://personal-dashboard-portfolio-pg.netlify.app/
 
-![alt text](/home1.jpg)
-![alt text](/learning.jpg)
-![alt text](/home2.jpg)
+![Homepage](https://scontent.fbud7-3.fna.fbcdn.net/v/t1.15752-9/338662834_1657904294640488_601079988230398047_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=ae9488&_nc_ohc=xaNxpN3ip7IAX8RI3vn&_nc_ht=scontent.fbud7-3.fna&oh=03_AdSPiZP7ssntx9HI0smjiyq7Yq9FIbkG1lDGjDLeP68eTA&oe=645A269C)
+![Learning mode](https://scontent.fbud7-3.fna.fbcdn.net/v/t1.15752-9/338775290_5917113645081006_5003421285850410695_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=ae9488&_nc_ohc=Zw4K54Y9UNQAX_vOeQ5&_nc_ht=scontent.fbud7-3.fna&oh=03_AdSRIqM8hnZN484DlvnHOP0wN6xsCz1ucseNAcE8MWy3ng&oe=645A2060)
+![Home with stickies](https://scontent.fbud7-4.fna.fbcdn.net/v/t1.15752-9/338908304_934430287904388_613951149970296048_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=ae9488&_nc_ohc=K1tY3ejBKMkAX-EiUsz&_nc_ht=scontent.fbud7-4.fna&oh=03_AdTqHwfHtgrqxDWs_4cRGZ3SArULNXF6AmxOc1aBTCBjvQ&oe=645A2CD9)
 
 ## Functionality
 
